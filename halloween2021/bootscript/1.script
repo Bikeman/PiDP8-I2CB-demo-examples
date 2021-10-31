@@ -1,0 +1,116 @@
+; Load paper tapes in RIM format from the DEC high-speed PTR.
+; 
+; This routine differs from that printed in DEC's manuals in that it
+; starts with a HLT instruction so that when you [re]start SIMH with
+; IF=1, running this program, the processor auto-halts, giving the user
+; the opportunity to attach a paper tape via DF or ATTACH, then start
+; the processor at 7756 as normal.
+; 
+; The RIM loader code printed on the front panel of the PDP-8/I differs
+; because it is for the the paper tape reader built into a Teletype
+; Model 33 ASR.  See asr33-rim-loader.pal for that other implementation,
+; including more information about it.
+; 
+; Raw disassembly done from the octal values by Bernhard Baehr's PDP-8/E
+; Simulator.  Comments and labels by Warren Young.  Original copyright
+; by Digital Equipment Corporation: this program appeared in many DEC
+; manuals printed throughout the PDP-8 era variants of which were made
+; (and thus documented) from 1965 to 1979.
+;
+set df disabled
+set cpu noidle
+
+;set throttle 333k
+
+; start I2C bridge test code
+
+set clk 60Hz
+
+set i2cb enabled
+set i2cb0 enabled
+set i2cb1 enabled
+set i2cb2 enabled
+set i2cb3 enabled
+
+
+set i2cb0 devno=30
+set i2cb0 i2caddr=11
+set i2cb1 devno=31
+set i2cb1 i2caddr=20
+set i2cb2 devno=54
+set i2cb2 i2caddr=20
+set i2cb3 devno=53
+set i2cb3 i2caddr=20
+
+
+dep 00000 0000
+dep 00001 5402
+dep 00002 0300
+dep 00030 0000
+dep 00200 6030
+dep 00201 6001
+dep 00202 6131
+dep 00203 7300
+dep 00204 1364
+dep 00205 1030
+dep 00206 7420
+dep 00207 5217
+dep 00210 7300
+dep 00211 3030
+dep 00212 1363
+dep 00213 7040
+dep 00214 3363
+dep 00215 1363
+dep 00216 6302
+dep 00217 7300
+dep 00220 1365
+dep 00221 7041
+dep 00222 1366
+dep 00223 7650
+dep 00224 5230
+dep 00225 1366
+dep 00226 6542
+dep 00227 3365
+dep 00230 6532
+dep 00231 7000
+dep 00232 7000
+dep 00233 7000
+dep 00234 7000
+dep 00235 7000
+dep 00236 6531
+dep 00237 5231
+dep 00240 6534
+dep 00241 6311
+dep 00242 2370
+dep 00243 5242
+dep 00244 5203
+dep 00300 3360
+dep 00301 7010
+dep 00302 3361
+dep 00303 6133
+dep 00304 5313
+dep 00305 2030
+dep 00306 7000
+dep 00307 7604
+dep 00310 0367
+dep 00311 3366
+dep 00312 5314
+dep 00313 6032
+dep 00314 7300
+dep 00315 1361
+dep 00316 7004
+dep 00317 1360
+dep 00320 6001
+dep 00321 5400
+dep 00360 0000
+dep 00361 0000
+dep 00362 0000
+dep 00363 4001
+dep 00364 7704
+dep 00365 0000
+dep 00366 0000
+dep 00367 0003
+dep 00370 0000
+
+g 200
+

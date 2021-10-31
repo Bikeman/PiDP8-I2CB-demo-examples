@@ -1,0 +1,123 @@
+
+
+
+                                                                          Page 1
+
+
+    1              
+    2        6302          LEDW=6302       / 12 LED OUTPUT, PUMPKIN
+    3        6311          LROW=6311       / 12 LED OUTPUT, RAINBOW
+    4              
+    5        6131          CLEI=6131       / ENABLE INTERRUPTS FROM M882
+    6        6132          CLDI=6132       / CLEAR INTERRUPT
+    7        6133          CLSK=6133       / SKIP ON CLOCK FLAG AND CLEAR FLAG
+    8              
+    9        6531          ADSF=6531       / SKIP IF ADC VALUE AVAILABLE 
+   10        6532          ADCV=6532       / START ADC MEASUREMENT
+   11        6534          ADRB=6534       / READ ADC VALUE
+   12              
+   13        6541          ADCC=6541       / CLEAR MUX CHANNEL
+   14        6542          ADSC=6542       / SET MUX CHANNEL
+   15        6544          ADIC=6544       / INC MUX CHANNEL
+   16              
+   17        0000          *0
+   18 00000  0000  IRET,   0
+   19 00001  5402          JMP I 2 
+   20 00002  0300          INTSER
+   21              
+   22        0030          *30
+   23 00030  0000  CLOCK,  0
+   24              
+   25              
+   26              
+   27        0200          *200
+   28 00200  6030          KCF
+   29 00201  6001          ION             / ENABLE INTERRUPTS
+   30 00202  6131          CLEI
+   31 00203  7300  START,  CLA CLL    
+   32 00204  1364          TAD MSIXTY 
+   33 00205  1030          TAD CLOCK
+   34 00206  7420          SNL
+   35 00207  5217          JMP CHKSR
+   36 00210  7300  BLINK,  CLA CLL 
+   37 00211  3030          DCA CLOCK
+   38 00212  1363          TAD CPATT  
+   39 00213  7040          CMA
+   40 00214  3363          DCA CPATT
+   41 00215  1363          TAD CPATT 
+   42 00216  6302          LEDW  
+   43              
+   44 00217  7300  CHKSR,  CLA CLL
+   45 00220  1365          TAD CHANN
+   46 00221  7041          CIA
+   47 00222  1366          TAD SR
+   48 00223  7650          SNA CLA 
+   49 00224  5230          JMP PADC
+   50 00225  1366          TAD SR
+
+
+
+                                                                          Page 2
+
+
+   51 00226  6542          ADSC 
+   52 00227  3365          DCA CHANN
+   53 00230  6532  PADC,   ADCV
+   54 00231  7000  WTADC,  NOP             / NOPS JUST TO PREVENT SIMH'S 
+   55 00232  7000          NOP             / INSTR PER SEC COUNT FROM 
+   56 00233  7000          NOP             / FALLING TOO DEEP             
+   57 00234  7000          NOP
+   58 00235  7000          NOP     
+   59 00236  6531          ADSF 
+   60 00237  5231          JMP WTADC
+   61 00240  6534          ADRB
+   62 00241  6311          LROW                    
+   63              
+   64              
+   65 00242  2370  DLOOP,  ISZ DELAY       / IN A REAL WORLD APPLICATION, 
+   66 00243  5242          JMP DLOOP       / DO SOMETHING USEFUL HERE 
+   67 00244  5203          JMP START       
+   68                      
+   69              
+   70        0300          *300            / CLOCK INTERRRUPT, JUST UPDATES CLOCK 
+   71                                      / AND SR 60 TIMES A SEC
+   72 00300  3360  INTSER, DCA INTACC      / SAVE AC
+   73 00301  7010          RAR 
+   74 00302  3361          DCA INTLNK      / ANSD LINK 
+   75 00303  6133          CLSK 
+   76 00304  5313          JMP INTNC       / INTERRUPT ON SOMETH ELSE, NOT CLOCK
+   77 00305  2030          ISZ CLOCK       
+   78 00306  7000          NOP             / IGNORE OVERFLOW
+   79 00307  7604          LAS             / LOAD 2 LEAST SIG BITS OF SR
+   80 00310  0367          AND THREE       
+   81 00311  3366          DCA SR          / STORE IN VAR
+   82 00312  5314          JMP INTRET
+   83 00313  6032  INTNC,  KCC             / CLEAR KEYBOARD AS LIKELY SOURCE OF INT 
+   84 00314  7300  INTRET, CLA CLL     
+   85 00315  1361          TAD INTLNK      / RESTORE AC AND LINK
+   86 00316  7004          RAL
+   87 00317  1360          TAD INTACC
+   88 00320  6001          ION
+   89 00321  5400          JMP I 0 
+   90              
+   91              
+   92        0360          *360
+   93 00360  0000  INTACC, 0                
+   94 00361  0000  INTLNK, 0
+   95 00362  0000  TMP,    0
+   96 00363  4001  CPATT,  4001            / PUMPKIN PATTERN, EYES ON, REST OFF
+   97 00364  7704  MSIXTY, 7704
+   98 00365  0000  CHANN,  0
+   99 00366  0000  SR,     0       
+  100 00367  0003  THREE,  3
+
+
+
+                                                                          Page 3
+
+
+  101 00370  0000  DELAY,  0
+  102              $
+
+      No detected errors
+      No links generated
